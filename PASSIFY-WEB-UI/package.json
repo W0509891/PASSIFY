@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "npm run lint && npm run lint:html && vite build",
+    "build": "npm run lint && npm run lint:html && vite build --outDir build",
     "lint": "eslint .",
     "lint:html": "html-validate index.html",
     "preview": "vite preview"
