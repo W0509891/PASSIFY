@@ -19,7 +19,7 @@ function Details() {
             }
         }
         getActivity()
-    }, [])
+    }, [apiUrl, id])
 
     return (
         <>

@@ -9,34 +9,43 @@ function App() {
     const [view, setView] = useState('all')
     const [currentPage, setCurrentPage] = useState(1)
     const [loading, setLoading] = useState(true)
+    const [isReloaded, setIsReloaded] = useState(false)
+
+    //Check if page was reloaded
+    useEffect(() => {
+        const entries = performance.getEntriesByType('navigation');
+        const isRefresh = entries.length > 0 && entries[0].type === 'reload';
+        setIsReloaded(isRefresh);
+    }, [])
+
+    //Pagination count
     const itemsPerPage = 20
 
-    const apiUrl = import.meta.env.VITE_API_URL
-
-    useEffect(() => {
-        const getActivities = async () => {
-            setLoading(true)
-            try {
-                const response = await fetch(apiUrl + '')
-                const data = await response.json()
-
-                if (response.ok) {
-                    setActivities(data)
-                }
-            } catch (error) {
-                console.error("Failed to fetch activities:", error)
-            } finally {
-                setLoading(false)
-            }
-        }
-        getActivities()
-    }, [])
+	const apiUrl = import.meta.env.VITE_API_URL
+	const getActivities = async () => {
+		setLoading(true)
+		const response = await fetch(apiUrl + '')
+		const data = await response.json()
+		if (response.ok) {
+			return data
+		}
+	}
+	//gets all activities from the api
+	useEffect(() => {
+		getActivities().then(data => {
+			if (activities.length === 0) {
+				setActivities(data)
+			}
+		}).catch(error => console.error("Error fetching activities:", error))
+			.finally(() => setLoading(false))
+	}, [])
 
     const handleViewChange = (e) => {
         setView(e.target.value)
         setCurrentPage(1)
     }
 
+    //Activity reducer
     const categories = ['all', ...new Set(activities.map(activity => activity.Category))]
 
     const filteredActivities = activities.filter(activity => {
@@ -44,6 +53,7 @@ function App() {
         return activity.Category === view
     })
 
+    //Pagination math
     const totalPages = Math.ceil(filteredActivities.length / itemsPerPage)
     const startIndex = (currentPage - 1) * itemsPerPage
     const paginatedActivities = filteredActivities.slice(startIndex, startIndex + itemsPerPage)
@@ -57,6 +67,7 @@ function App() {
     return (
         <div className="app-container">
             <div className="controls-container">
+                {/*Category anf pagination view*/}
                 <div className="view-selector">
                     <label>Category</label>
                     <select value={view} onChange={handleViewChange}>
@@ -93,13 +104,10 @@ function App() {
                 </div>
             </div>
             <div className={"event-grid-container"}
-            style={loading ? { display: "flex" } : undefined}>
+            style={loading ? { display: "flex", justifyContent: "center", alignItems: "center", height: "100%" } : undefined}>
                 {
-                    loading ? (
-                        <LoadingIcon />
-                    ) : (
-                        paginatedActivities.length > 0 ? (
-                            paginatedActivities.map(activity =>(
+                    loading ? <LoadingIcon /> : (
+                        paginatedActivities.length > 0 ? paginatedActivities.map(activity =>(
                                 <EventCard
                                     key={activity.ActivityId}
                                     ActivityId={activity.ActivityId}
@@ -110,9 +118,20 @@ function App() {
                                     EventEnd={activity.EventEnd}
                                     Organizer={activity.Organizer}
                                 />
-                            ))
-                        ) : (
-                            <p>No events found for this view.</p>
+                            )) : (
+                            <div className="no-events-container">
+                                {view.toLowerCase() === "all" ? (
+                                    <div className="database-sleep-notice">
+                                        <p>Based on the nature of the hosting service the database might be asleep, you may want to refresh the page :(</p>
+
+                                        {isReloaded && (
+                                            <p style={{marginTop: "1rem", fontWeight: "600"}}>If still you still see this, please <a href="mailto:dasil.adam@gmail.com">contact me</a> and I'll investigate right away</p>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <p>No events found for {view}.</p>
+                                )}
+                            </div>
                         )
                     )
                 }
