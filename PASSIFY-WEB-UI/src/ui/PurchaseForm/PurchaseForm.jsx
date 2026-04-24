@@ -4,8 +4,8 @@ import LoadingIcon from "../../ui/LoadingIcon/LoadingIcon.jsx";
 
 import {useState} from "react";
 import {useForm} from "react-hook-form";
-import {Logger} from "sass";
 import {Link} from "react-router-dom";
+import {Disclaimer} from "../Disclaimer.jsx";
 
 function PurchaseForm(props) {
     function $qs(queryselector) {
@@ -15,7 +15,7 @@ function PurchaseForm(props) {
     const apiUrl = import.meta.env.VITE_API_URL
     const {register, handleSubmit, formState: {errors}} = useForm();
     const user = JSON.parse(localStorage.getItem("user"))
-    const [isLoaing, setIsLoading] = useState(null)
+    const [isLoading, setIsLoading] = useState(null)
 
     let tregex = /^\d+$/;
     let eregex = /^(\w+\.?\w+)@(\w+(\.\w+){0,2})(\.[a-zA-Z]+)$/
@@ -116,24 +116,23 @@ function PurchaseForm(props) {
 
 
     return (
-
         <div className={"purchase-form-container"}>
 
             <div>
                 <form method={"POST"} onSubmit={handleSubmit(onSubmit)}>
+                    <Disclaimer size={"15px"} />
                     <div className={"formfieldgroup"}>
-                        <label>Event ID</label>
+
                         <input type="text" name="event_id" value={props.EventId}
-                               {...register("event_id")} readOnly/>
+                               {...register("event_id")} readOnly hidden/>
                     </div>
 
                     <div className={"formfieldgroup"}>
                         <label>Tickets</label>
                         <input type="number" name="tickets" max={10} placeholder={"Maximum per purchase is 10"}
-                               style={{borderColor: errors.tickets ? "#ff0000" : "#cccccc"}}
-                               {...register("tickets", {max: 10, required: true, pattern: tregex})}/>
-
-
+                               style={{borderColor: errors.tickets ? "#dc2626" : ""}}
+                               {...register("tickets", {max: 10, min:1,  required: true, pattern: tregex})}/>
+                        {errors.tickets && <span className="error-message">Invalid number of tickets (max 10)</span>}
                     </div>
 
                     <div className={"formfieldgroup"}>
@@ -141,28 +140,28 @@ function PurchaseForm(props) {
                         <input type="text" name="email" placeholder={"example@domain.com"}
                                defaultValue={user.email}
                                disabled={true}
-                               style={{borderColor: errors.email ? "#ff0000" : "#cccccc"}}
+                               style={{borderColor: errors.email ? "#dc2626" : ""}}
                                {...register("email", {required: true, pattern: eregex})}/>
                     </div>
 
                     <div className={"formfieldgroup"}>
                         <label>Exp</label>
                         <input type="text" name="ccexp" maxLength={5} placeholder={"MM/YY"}
-                               style={{borderColor: errors.ccexp ? "#ff0000" : "#cccccc"}}
+                               style={{borderColor: errors.ccexp ? "#dc2626" : ""}}
                                {...register("ccexp", {required: true, pattern: cxpregex})}/>
-
+                        {errors.ccexp && <span className="error-message">Format: MM/YY</span>}
                     </div>
 
                     <div className={"formfieldgroup"}>
                         <label>CVV</label>
                         <input type="text" id="cccvv" name="cccvv" maxLength={4} placeholder={"123"}
-                               style={{borderColor: errors.cccvv ? "#ff0000" : "#cccccc"}}
+                               style={{borderColor: errors.cccvv ? "#dc2626" : ""}}
                                {...register("cccvv", {required: true, pattern: cvvregex})}/>
-
+                        {errors.cccvv && <span className="error-message">Invalid CVV</span>}
                     </div>
 
-                    {isLoaing === null ? <button>Purchase</button> :
-                        isLoaing ? <button className={"loading-button"}><LoadingIcon/></button> :
+                    {isLoading === null ? <button>Purchase</button> :
+                        isLoading ? <button className={"loading-button"}><LoadingIcon/></button> :
                             <Link to={"/tickets"}>
                                 <button className={"btn-after btn-outline-light"}>See Tickets</button>
                             </Link>

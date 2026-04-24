@@ -1,9 +1,8 @@
+@use "sass:color";
 // Variables
 $primary: #4f46e5;
 $text-muted: #94a3b8;
 $primary-dark: #4338ca;
-//$bg: #f4f6fb;
-$card-bg: #6a6363;
 $text-dark: #1f2937;
 $text-light: #6b7280;
 $border: #e5e7eb;
@@ -27,7 +26,7 @@ $error: #dc2626;
 // Card
 form {
   width: 100%;
-  background: $card-bg;
+  background: $text-dark;
   padding: 2.5rem;
   border-radius: 16px;
   border: 1px solid $border;
@@ -39,7 +38,7 @@ form {
 
   h2 {
     text-align: center;
-    color: $text-dark;
+    color: $text-light;
     margin-bottom: 0.5rem;
     font-size: 1.875rem;
     font-weight: 700;
@@ -115,19 +114,16 @@ form {
   transition: all 0.2s;
 
   &:hover {
-    color: lighten($primary, 10%);
+    color: color.scale($primary, $lightness:10%);
     background: rgba(99, 102, 241, 0.1);
   }
 }
 
 .error-message {
   color: $error;
-  font-size: 0.875rem;
+  font-size: 1rem;
   text-align: center;
-  background: rgba(239, 68, 68, 0.1);
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  align-self: start;
 }
 
 @keyframes fadeIn {

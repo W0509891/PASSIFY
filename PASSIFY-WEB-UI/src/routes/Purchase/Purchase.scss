@@ -1,7 +1,40 @@
-.purchase-container{
-  //background-color: #ff8407;
+.purchase-container {
+  min-height: calc(100vh - 80px); // Adjusting for Navbar height
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
 
-  h1{
-    margin-bottom: 1em;
+  h1 {
+    color: whitesmoke;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 2.25rem;
+    font-weight: 800;
+  }
+
+  .details-header {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: flex-start;
+
+    .btn {
+      text-decoration: none;
+      color: #4f46e5;
+      font-weight: 500;
+      font-size: 0.875rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+
+      &:hover {
+        background-color: rgba(79, 70, 229, 0.1);
+        border-color: rgba(79, 70, 229, 0.2);
+      }
+    }
   }
 }

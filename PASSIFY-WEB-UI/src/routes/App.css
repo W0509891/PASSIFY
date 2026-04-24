@@ -108,3 +108,30 @@
   opacity: 0.2;
   cursor: not-allowed;
 }
+
+.no-events-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  text-align: center;
+  padding: 2rem;
+  color: #94a3b8;
+  font-size: 1.1rem;
+}
+
+.database-sleep-notice {
+  background-color: rgba(79, 70, 229, 0.05);
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem 2.5rem;
+  max-width: 600px;
+  color: #e2e8f0;
+  line-height: 1.6;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.database-sleep-notice p {
+  margin: 0;
+}

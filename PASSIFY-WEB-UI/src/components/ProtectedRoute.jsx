@@ -1,16 +1,19 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const ProtectedRoute = ({ children }) => {
     const { user, loading } = useAuth();
+    const location = useLocation();
 
     if (loading) {
         return <div>Loading...</div>;
     }
 
     if (!user) {
-        return <Navigate to="/auth" replace />;
+        // Construct the full return path including search parameters
+        const returnPath = encodeURIComponent(location.pathname + location.search);
+        return <Navigate to={`/auth?return=${returnPath}`} replace />;
     }
 
     return children;

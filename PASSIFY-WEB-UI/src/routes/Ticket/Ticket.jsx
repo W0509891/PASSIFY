@@ -39,7 +39,7 @@ function Ticket() {
             <div className="header-section">
                 <h1>Your Tickets</h1>
                 <p className="note">
-                    Please note this is only temporary and your tickets have been sent to the email provided at the time of purchase.
+                    Feel free to <span style={{color: "blue", cursor: "pointer"}}>contact us</span> if you have any questions or need assistance with your tickets.
                 </p>
             </div>
 

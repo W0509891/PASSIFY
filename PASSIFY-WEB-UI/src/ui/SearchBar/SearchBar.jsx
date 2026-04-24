@@ -59,7 +59,6 @@ function SearchBar() {
 
                 //Save search results to state
                 const data = await response.json()
-                console.log("Data", data)
                 console.log("ResponseStatus", response.status)
 
                 //If the response is successful, save the search results to state.

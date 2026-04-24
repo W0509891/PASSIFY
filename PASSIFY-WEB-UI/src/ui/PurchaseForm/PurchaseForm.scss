@@ -1,90 +1,123 @@
+@use "sass:color";
+
+// Variables consistent with auth.scss
+$primary: #4f46e5;
+$primary-dark: #4338ca;
+$text-dark: #1f2937;
+$text-light: #6b7280;
+$text-muted: #94a3b8;
+$border: #e5e7eb;
+$error: #dc2626;
+
 .purchase-form-container {
   display: flex;
   justify-content: center;
-  //outline: #ff0000 solid 1px;
+  width: 100%;
 
   > div {
-    //outline: #ff8407 solid 1px;
-    background-color: #262525;
-    padding: 3em;
-    box-shadow: #1a1a1a 10px 10px;
-    border-radius: 10px;
-    width: 25%;
+    width: 100%;
+    max-width: 500px;
+    background: $text-dark;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
   }
 
   .formfieldgroup {
     display: flex;
-    align-items: center;
-    margin: 10px 0;
-    gap: 10px;
+    flex-direction: column;
+    gap: 0.5rem;
 
     label {
-
-      text-align: justify;
-      width: 70px;
-      flex-shrink: 0;
+      align-self: start;
+      color: white;
+      font-size: 0.875rem;
       font-weight: 500;
+      margin-left: 0.25rem;
     }
 
     input {
       width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      border: 1px solid $border;
+      color: $text-light;
+      font-size: 1rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-sizing: border-box;
+      background: white;
+
+      &::placeholder {
+        color: $text-muted;
+      }
 
       &:focus {
         outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        transform: translateY(-1px);
       }
 
+      &:disabled {
+        background-color: #f3f4f6;
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
     }
-
-    span {
-      color: #dc3545 !important;
-    }
-
   }
 
   button {
     width: 100%;
-    margin-top: 24px;
-    padding: 10px 20px;
-    transition: background-color 0.3s, outline-color 1s, transform 0.1s;
+    margin-top: 1rem;
+    padding: 0.875rem;
+    border: none;
+    border-radius: 10px;
+    background: $primary;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
 
-    &:not(.btn-after, .loading-button) {
-      background-color: #4CAF50;
-      border: none;
-      border-radius: 6px;
+    &:hover:not(:disabled) {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &.loading-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $primary-dark;
+      cursor: wait;
+    }
+
+    &.btn-after {
+      background-color: #10b981; // Success green
 
       &:hover {
-        outline: 3px solid #4CAF50;
-        background-color: hsl(var(--primary) / 0.9);
-      }
-
-      &:active {
-        transform: scale(0.98);
+        background-color: #059669;
       }
     }
   }
+}
 
-    .loading-button {
-      background-color: #3b5c42;
-      width: auto;
-      transition: width 1s, ease-in;
-
-      &:hover {
-        outline: none;
-      }
-    }
-
-
-    .btn-after {
-      background-color: #c65a1b;
-      border-color: #ced4da;
-
-      &:hover {
-        color: #111;
-        background-color: #ff6e18;
-        border-color: #f8f9fa;
-      }
-    }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
