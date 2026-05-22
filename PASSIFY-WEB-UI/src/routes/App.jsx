@@ -21,27 +21,24 @@ function App() {
     //Pagination count
     const itemsPerPage = 20
 
-    const apiUrl = import.meta.env.VITE_API_URL
-
-    //gets all activities from the api
-    useEffect(() => {
-        const getActivities = async () => {
-            setLoading(true)
-            try {
-                const response = await fetch(apiUrl + '')
-                const data = await response.json()
-
-                if (response.ok) {
-                    setActivities(data)
-                }
-            } catch (error) {
-                console.error("Failed to fetch activities:", error)
-            } finally {
-                setLoading(false)
-            }
-        }
-        getActivities()
-    }, [])
+	const apiUrl = import.meta.env.VITE_API_URL
+	const getActivities = async () => {
+		setLoading(true)
+		const response = await fetch(apiUrl + '')
+		const data = await response.json()
+		if (response.ok) {
+			return data
+		}
+	}
+	//gets all activities from the api
+	useEffect(() => {
+		getActivities().then(data => {
+			if (activities.length === 0) {
+				setActivities(data)
+			}
+		}).catch(error => console.error("Error fetching activities:", error))
+			.finally(() => setLoading(false))
+	}, [])
 
     const handleViewChange = (e) => {
         setView(e.target.value)

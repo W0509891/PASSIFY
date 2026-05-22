@@ -15,7 +15,7 @@ function Purchase() {
         if (!event_id && !eventName) {
             navigate("/")
         }
-    }, [])
+    }, [event_id, eventName, navigate])
 
     return (
         <>

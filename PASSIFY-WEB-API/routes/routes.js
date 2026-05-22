@@ -1,6 +1,7 @@
 import express from 'express';
 import sql from "mssql";
 import {createTicket, getTickets} from "../services/TicketService.js";
+import {GetService, PostService, PatchService, DeleteService} from "../services/QueryService.js";
 import 'dotenv/config';
 
 
@@ -11,29 +12,8 @@ const dbconnstr = process.env.CONNECTION_STRING;
 
 // GET all /api/activities
 router.get('/', async (req, res) => {
-
-    await sql.connect(dbconnstr)
-
-    const result = await sql.query(
-        `
-            SELECT Act.[ActivityId], Act.[Title] AS "ActivityName", Act.[Description], Act.[ImageName], 
-                FORMAT(Act.[EventStart], 'dd, MMMM yyy - HH:mm') as 'EventStart',
-                FORMAT(Act.[EventEnd], 'dd, MMMM yyy - HH:mm') as EventEnd,   
-                Cat.[CategoryId], Cat.[Title] As "Category",
-                Org.[OrganizerId], Org.[Name]  As "Organizer"
-            from [dbo].[Activity] Act
-                INNER JOIN [dbo].[Category] Cat
-            ON Act.[CategoryId] = Cat.[CategoryId]
-                INNER JOIN [dbo].[Organizer] Org on Act.[OrganizerId] = Org.[OrganizerId]
-            WHERE ACT.[ImageName] != ' '
-            ORDER BY Act.[EventStart] Asc`
-    )
-
-    res.json(result.recordsets[0])
-    // console.dir(result.recordsets)
-
+    res.json(await GetService.GetActivities())
 })
-
 
 //GET n Amouunt of activities
 router.get('/next', async (req, res) => {
@@ -201,28 +181,16 @@ router.get('/createticket', async (req, res) => {
     const searchParam = req.query.event_id;
     const email = req.query.user_email;
     console.log(req.query)
-    await sql.connect(dbconnstr)
+    
+    const result = await GetService.GetActivityTickets(searchParam)
 
-    const result = await sql.query(
-        `
-            SELECT Act.[ActivityId],
-                    Act.[Title] AS "ActivityName",
-                   Act.[Description],
-                   Act.[ImageName],
-                   FORMAT(Act.[EventStart], 'MMM dd yyy - HH:mm') as EventStart,
-                FORMAT(Act.[EventEnd], 'MMM dd yyy - HH:mm') as EventEnd
-            from [dbo].[Activity] as Act
-            WHERE ACT.[ActivityId] = '${searchParam}'
-            ORDER BY Act.[EventStart] Asc`
-    )
-
-    if (result.recordsets[0].length < 1) {
+    if (result.length < 1) {
         res.status(404)
             .send({message: "No activities found"})
     }
     else {
-        res.send({message: "Success", status: 200, result: result.recordsets[0][0]})
-        await createTicket(result.recordsets[0][0], email)
+        res.send({message: "Success", status: 200, result: result[0]})
+        await createTicket(result[0], email)
     }
 })
 
@@ -230,44 +198,25 @@ router.get('/createticket', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const id = req.params.id;
 
-    await sql.connect(dbconnstr)
+    const result = await GetService.GetActivityById(id)
 
-    const result = await sql.query(
-        `SELECT TOp 1 Act.[ActivityId], Act.[Title] AS "ActivityName", Act.[Description], Act.[ImageName], FORMAT(Act.[EventStart], 'dd, MMMM yyy - HH:mm') as 'EventStart',
-        FORMAT(Act.[EventEnd], 'dd, MMMM yyy - HH:mm')as EventEnd,
-                Cat.[CategoryId], Cat.[Title] As "Category",
-                Org.[OrganizerId], Org.[Name]  As "Organizer"
-        from [dbo].[Activity] Act
-             INNER JOIN [dbo].[Category] Cat ON Act.[CategoryId] = Cat.[CategoryId]
-             INNER JOIN [dbo].[Organizer] Org on Act.[OrganizerId] = Org.[OrganizerId]
-         WHERE Act.[ActivityId] = ${id}`
-    )
-
-
-    if (result.recordsets[0].length === 0) {
+    if (result.length === 0) {
         res.status(404)
             .send("Activity not found")
     } else {
-        res.json(result.recordsets[0][0])
+        res.json(result[0])
     }
-
 })
 
 // GET all /api/activities/1/purchases
 router.get('/:id/purchases', async (req, res) => {
     const id = req.params.id;
-
-    await sql.connect(dbconnstr)
-
-    const result = await sql.query(`SELECT *
-                                    FROM [dbo].[Purchase]
-                                    WHERE ActivityId = ${id}`)
-
-    if (result.recordsets[0].length === 0) {
+    const result = await GetService.GetActivityPurchases(id)
+    if (result.length === 0) {
         res.status(404)
             .send("Activity not found")
     } else {
-        res.send(result.recordsets[0])
+        res.send(result[0])
     }
 })
 
