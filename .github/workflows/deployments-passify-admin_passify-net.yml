@@ -81,9 +81,13 @@ jobs:
       - name: Create Pull Request for ${{github.ref_name}} and merge into master
         run: |
           # Create PR if it doesn't exist
-          pr_url=$(gh pr create -B master -H ${{github.ref_name}} --title "Automated Pull Request" --body "This PR was 
-          created and 
-          merged automatically by GitHub Actions." 2>/dev/null || gh pr list -H tests -B master --json url -q '.[0].url')
+          pr_url=$(gh pr create \ 
+            -B master \
+            -H ${{github.ref_name}} \
+            --title "Automated Pull Request" \
+            --body "This PR was created and merged automatically by GitHub Actions." \
+            2>/dev/null ||  \
+            gh pr list -H ${{github.ref_name}} -B master --json url -q '.[0].url')
 
           if [ -n "$pr_url" ]; then
             echo "PR URL: $pr_url"
