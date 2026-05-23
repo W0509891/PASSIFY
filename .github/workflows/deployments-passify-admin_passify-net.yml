@@ -76,6 +76,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - run: gh -h
+        
       - name: Create Pull Request for ${{github.ref_name}} and merge into master
         run: |
           # Create PR if it doesn't exist
