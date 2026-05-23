@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - passify-net
+name: Build and deploy PASSIFY ASP.Net ADMIN APP TO AZURE
 
 on:
   push:
@@ -63,3 +63,29 @@ jobs:
           slot-name: 'Production'
           package: .
           
+  pull-req:
+    permissions:
+      pull-requests: write
+      contents: write
+    needs: [ build, deploy ]
+    name: Create and Merge Pull Request
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Pull Request for ${{github.ref_name}} and merge into master
+        run: |
+          # Create PR if it doesn't exist
+          pr_url=$(gh pr create -B master -H ${{github.ref_name}} --title "Automated Pull Request" --body "This PR was 
+          created and 
+          merged automatically by GitHub Actions." 2>/dev/null || gh pr list -H tests -B master --json url -q '.[0].url')
+
+          if [ -n "$pr_url" ]; then
+            echo "PR URL: $pr_url"
+            gh pr merge "$pr_url" --merge --auto
+          else
+            echo "No PR created or found."
+          fi
