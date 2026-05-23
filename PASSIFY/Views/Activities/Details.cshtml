@@ -9,22 +9,22 @@
 }
 
 <div>
-    <h4>Activity details</h4>
-    <hr/>
-    <div class="container">
-        <div class="d-flex justify-content-evenly w-75">
+    <h4 class="text-xl font-bold">Activity details</h4>
+    <hr class="my-4"/>
+    <div class="container mx-auto">
+        <div class="flex flex-col md:flex-row justify-around w-full">
 
 
-            <dl class="container row">
+            <dl class="flex flex-wrap w-full md:w-1/2">
                 @foreach (var item in Model.GetType().GetProperties())
                 {
                     // Doesn't display the ID, filename, or organizer ID.'
                     @if (!ignore.Contains(item.Name))
                     {
-                        <dt class="w-25">
+                        <dt class="w-1/4 font-semibold p-2">
                             @Html.DisplayName(item.Name)
                         </dt>
-                        <dd class="w-75">
+                        <dd class="w-3/4 p-2">
                             @* Switch statement to accout for Navigation objects *@
                             @switch (item.Name)
                             {
@@ -38,7 +38,7 @@
                                     @Html.DisplayFor(model => model.Title)
                                     break;
                                 case "Purchases":
-                                    <a asp-action="ActivityPurchases" asp-route-id="@Model.ActivityId"
+                                    <a class="text-blue-600 hover:underline" asp-action="ActivityPurchases" asp-route-id="@Model.ActivityId"
                                        asp-controller="Activities">@Html.DisplayFor(model => model.Purchases!.Count)</a>
                                     break;
                                 default:
@@ -54,22 +54,22 @@
             <!-- Activity Image-->
             @* <img src="@Url.Content("/photos/" + Model.Filename)" alt="@Model.Title" /> *@
 
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Activity Image</h5>
+            <div class="w-full md:w-1/2 mt-4 md:mt-0">
+                <div class="bg-white shadow rounded-lg overflow-hidden border">
+                    <div class="bg-gray-50 px-4 py-2 border-b">
+                        <h5 class="font-semibold">Activity Image</h5>
                     </div>
-                    <div class="card-body text-center">
+                    <div class="p-4 text-center">
                         @if (string.IsNullOrWhiteSpace(Model.ImageName))
                         {
                             <img src="@Url.Content("~/assets/photos/placeholder.jpg")" alt="@Model?.Title"
-                                 class="img-fluid rounded"
+                                 class="max-w-full h-auto rounded"
                                  style="max-height: 400px; object-fit: cover;">
                         }
                         else
                         {
                             <img src="@Url.Content(Model.ImageName)" alt="@Model.Title" 
-                                 class="img-fluid rounded"
+                                 class="max-w-full h-auto rounded"
                                  style="max-height: 400px; object-fit: cover;">
                         }
                     </div>
@@ -78,7 +78,7 @@
 
         </div>
 
-        <div class="w-25 d-flex justify-content-sm-between align-items-center">
+        <div class="w-full md:w-1/4 flex justify-between items-center mt-6">
             <a asp-action="Edit" asp-route-id="@Model?.ActivityId">
 
                 <img src="/assets/svg/edit.svg"
