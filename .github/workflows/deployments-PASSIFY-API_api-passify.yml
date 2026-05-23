@@ -50,10 +50,10 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2D214D6462524783B5EF8A7FCDB75CA1 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2469C415A2D7422AAAFA689CBF58B319 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_5796D364950443C8BED3EFE078FAB650 }}
-
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C562DD64EC3D4B04BEABD3BCA2DA4AC8 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B68C683FBA2C4CA4A470F77B73117E75 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A8EE00603A4444B99E1258549C9D270F }}
+          
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -61,3 +61,42 @@ jobs:
           app-name: 'api-passify'
           slot-name: 'Production'
           package: .
+          
+  pull-req:
+    permissions:
+      pull-requests: write
+      contents: write
+    needs: [ deploy ]
+    name: Create and Merge Pull Request
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - run: gh -h
+
+      - name: Create Pull Request for ${{ github.ref_name }} and merge into master
+        run: |
+          BRANCH="${{ github.ref_name }}"
+
+          # Create PR if it doesn't exist
+          pr_url=$(gh pr create \
+            --base master \
+            --head "$BRANCH" \
+            --title "Automated Pull Request" \
+            --body "This PR was created and merged automatically by GitHub Actions." \
+            2>/dev/null || \
+            gh pr list \
+              --head "$BRANCH" \
+              --base master \
+              --json url \
+              --jq '.[0].url')
+
+          if [ -n "$pr_url" ]; then
+            echo "PR URL: $pr_url"
+            gh pr merge "$pr_url" --merge --auto
+          else
+            echo "No PR created or found."
+          fi
