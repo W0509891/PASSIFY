@@ -3,8 +3,9 @@ import router from "./routes/routes.js";
 import user_router from "./routes/user.js";
 import cors from "cors"; 
 import {GetService} from "./services/QueryService.js";
+import 'dotenv/config'
 
-const port = process.env.PORT | 30000;
+const port = process.env.PORT
 const app = express();
 
 let dbWakeLockUntil = 0;
