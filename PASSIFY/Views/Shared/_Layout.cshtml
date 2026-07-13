@@ -5,76 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - PASSIFY</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/PASSIFY.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true"/>
 </head>
 <body>
 
 
-<div class="d-flex">
-    @*side bar nav *@
-    <!--Sidebar-->
-    <aside class="position-fixed z-1 d-flex flex-column flex-shrink-0 test-sidebar min-vh-100 border-end">
-        @*Main Logo*@
-        <a class="d-block p-3 link-dark text-decoration-none border-bottom text-center" title="" data-bs-toggle="tooltip"
-           data-bs-placement="right" data-bs-original-title="Icon-only" asp-area="" asp-controller="Home"
-           asp-action="Index">PASSIFY</a>
 
-
-        @*List of Nav links and their logos*@
-        <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
-            @*Item 1*@
-            <li class="">
-                <a asp-controller="Organizers" asp-action="Index"
-                   class="nav-link link-dark text-decoration-none py-3 border-bottom d-inline-flex align-items-center flex-column" title=""
-                   data-bs-toggle="tooltip"
-                   data-bs-placement="right" data-bs-original-title="Dashboard">
-                    <img src="~/assets/svg/organizer.svg" alt="" width="30" height="30" class="mb-2"/>
-                    <span>Organizers</span>
-                </a>
-            </li>
-
-            @*Item 2*@
-            <li>
-                <a asp-action="Index" asp-controller="Categories"
-                   class="nav-link link-dark text-decoration-none py-3 border-bottom d-inline-flex align-items-center flex-column" title=""
-                   data-bs-toggle="tooltip"
-                   data-bs-placement="right" data-bs-original-title="Orders">
-                    <img src="~/assets/svg/cat_tag.svg" alt="" width="30" height="30" class="mb-2"/>
-                    <span>Categories</span>
-                </a>
-            </li>
-
-            @*Copy item n if extra needed*@
-        </ul>
-    </aside>
-    <!--End Sidebar-->
-
-    <div class="flex-grow-1">
-        <!--Start Navbar-->
-
-        <nav class="position-sticky top-0 navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3">
-            <div class="container-fluid">
-                <div id="for-end" class="navbar-collapse collapse d-sm-inline-flex">
+    <div class="flex flex-col flex-grow min-h-screen bg-white'">
+          
+            <!--Start Navbar-->
+        <nav class="sticky top-0 bg-white border-b shadow-sm z-10">
+            <div class="container mx-auto px-5">
+                <div id="for-end" class="flex flex-row-reverse sm:flex-row items-center">
                     @*Login/Logout*@
-                    <ul class="navbar-nav ms-auto">
+                    <div class="flex ml-auto items-center">
                         @if (User.Identity != null)
                         {
                             @if (User.Identity.IsAuthenticated)
                             {
-                                <li class="navbar-text pe-3">Hello, @User.Identity.Name</li>
-                                <li class="nav-item"><a class="nav-link text-dark" asp-action="Logout"
-                                                        asp-controller="Account">Logout</a></li>
+                                    <div>
+                                        <p class="p-3">Hello, <span class="text-blue-600">@User.Identity.Name</span></p>
+                                    </div>
+                                <div >
+                                    <a class="p-3 text-gray-800 hover:bg-amber-500 transition-colors duration-300" asp-action="Logout"
+                                    asp-controller="Account">Logout</a>
+                                </div>
                             }
                         }
                         else
                         {
-                            <li class="nav-item"><a class="nav-link text-dark" asp-action="Login"
-                                                    asp-controller="Account">Login</a></li>
+                            <div class="nav-item"><a class="block py-2 px-3 text-gray-800" asp-action="Login"
+                                                    asp-controller="Account">Login</a></div>
                         }
-                    </ul>
+                    </div>
                 </div>
 
                 @*Search Bar cancelled for now*@
@@ -86,16 +51,60 @@
         </nav>
         <!--End Navbar-->
 
-        <div class="container mt-1">
+        <div class="flex flex-row">
 
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
+            @*side bar nav *@
+            <aside class="flex flex-col shrink-0 test-sidebar min-h-screen border-r">
+
+                <!--Sidebar-->
+                @*List of Nav links and their logos*@
+                <ul class="flex flex-col mb-auto text-center">
+
+                    <li>
+                        @*Main Logo*@
+                        <a class="block p-3 text-gray-800 border-b text-center" title="" data-bs-toggle="tooltip"
+                           data-bs-placement="right" data-bs-original-title="Icon-only" asp-area="" asp-controller="Home"
+                           asp-action="Index">PASSIFY</a>
+                    </li>
+                    @*Item 1*@
+                    <li class="hover:bg-amber-500">
+                        <a asp-controller="Organizers" asp-action="Index"
+                           class="block text-gray-800 no-underline p-3 flex flex-col items-center" title=""
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="right" data-bs-original-title="Dashboard">
+                            <img src="~/assets/svg/organizer.svg" alt="" width="30" height="30" class="mb-2" />
+                            <span>Organizers</span>
+                        </a>
+                    </li>
+
+                    @*Item 2*@
+                    <li class="hover:bg-amber-50">
+                        <a asp-action="Index" asp-controller="Categories"
+                           class="block text-gray-800 no-underline p-3 flex flex-col items-center" title=""
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="right" data-bs-original-title="Orders">
+                            <img src="~/assets/svg/cat_tag.svg" alt="" width="30" height="30" class="mb-2" />
+                            <span>Categories</span>
+                        </a>
+                    </li>
+
+                    @*Copy item n if extra needed*@
+                </ul>
+            </aside>
+            <!--End Sidebar-->
+
+            <div class="container mx-auto mt-1 px-4">
+
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
         </div>
+
     </div>
 
 
-</div>
+
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

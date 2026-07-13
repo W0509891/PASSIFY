@@ -8,25 +8,25 @@
 <h1>Organizers Database</h1>
 
 <p>
-    <a class="btn btn-primary" asp-action="Create">Create New</a>
+    <a class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300" asp-action="Create">Create New</a>
 </p>
-<table class="table w-25">
-    <thead>
+<table class="w-1/4 border-collapse mt-4">
+    <thead class="bg-gray-200">
         <tr>
-            <th>
+            <th class="p-2 text-left border-b">
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th></th>
+            <th class="p-2 border-b"></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="divide-y divide-gray-200">
 @foreach (var item in Model) {
-        <tr data-id="@item.OrganizerId">
-            <td>
+        <tr data-id="@item.OrganizerId" class="hover:bg-gray-50">
+            <td class="p-2">
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
-                    <div class="d-flex flex-row justify-content-between actions">
+            <td class="p-2">
+                    <div class="flex flex-row justify-between actions">
                 <a asp-action="Edit" asp-route-id="@item.OrganizerId"><img src="~/assets/svg/edit.svg" width=@imgWidth/></a>
                     <a asp-action="Details" asp-route-id="@item.OrganizerId"><img src="~/assets/svg/details.svg" width=@imgWidth /></a>
                     <a asp-action="Delete" asp-route-id="@item.OrganizerId"><img src="~/assets/svg/delete.svg" width=@imgWidth /></a>

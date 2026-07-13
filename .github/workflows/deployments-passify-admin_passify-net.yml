@@ -1,41 +1,42 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy frontend API to Azure Web App
+name: Build and deploy PASSIFY ASP.Net ADMIN APP TO AZURE
 
 on:
   push:
     branches:
-      - deployments/PASSIFY-API
+      - deployments/PASSIFY-ADMIN
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       contents: read #This is required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
         with:
-          node-version: '24.x'
+          dotnet-version: '9.x'
 
-      - name: npm install
-        working-directory: PASSIFY-WEB-API/
-        run: |
-          npm install
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
+
+      - name: dotnet publish
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: node-app
-          path: PASSIFY-WEB-API/
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -45,7 +46,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: node-app
+          name: .net-app
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -53,20 +54,20 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C562DD64EC3D4B04BEABD3BCA2DA4AC8 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B68C683FBA2C4CA4A470F77B73117E75 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A8EE00603A4444B99E1258549C9D270F }}
-          
-      - name: 'Deploy to Azure Web App'
+
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'api-passify'
+          app-name: 'passify-net'
           slot-name: 'Production'
           package: .
-          
+  
   pull-req:
     permissions:
       pull-requests: write
       contents: write
-    needs: [ deploy ]
+    needs: [ build, deploy ]
     name: Create and Merge Pull Request
     runs-on: ubuntu-latest
     env:
@@ -80,7 +81,7 @@ jobs:
       - name: Create Pull Request for ${{ github.ref_name }} and merge into master
         run: |
           BRANCH="${{ github.ref_name }}"
-
+          
           # Create PR if it doesn't exist
           pr_url=$(gh pr create \
             --base master \
@@ -93,7 +94,7 @@ jobs:
               --base master \
               --json url \
               --jq '.[0].url')
-
+          
           if [ -n "$pr_url" ]; then
             echo "PR URL: $pr_url"
             gh pr merge "$pr_url" --merge --auto
