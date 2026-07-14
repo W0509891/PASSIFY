@@ -2,24 +2,44 @@
 
 @{
     ViewData["Title"] = "Details";
-    var imgWidth = 30;
 }
 
-<h1>Details</h1>
+<div class="flex gap-4 items-center">
+    
+<a asp-action="Index" class="bg-gray-300 hover:bg-gray-100 p-2 rounded-full">
+    <svg class="w-6 h-6">
+        <use href="@Helpers.SvgPath("back")" />
+    </svg>
+</a>
+
+<h1>Details for @Html.DisplayFor(model => model.Name)</h1>
+</div>
+
+<div class="flex justify-between items-center">
+    <a asp-action="Edit" asp-route-id="@Model?.OrganizerId">
+        <svg class="w-6 h-6">
+            <use href="@Helpers.SvgPath("edit")" />
+        </svg>
+    </a>
+  
+</div>
+
+@{
+    var table = new TableViewModel<Activity>
+    {
+        Items = Model.Activities ?? [],
+        Id = x => x.ActivityId,
+        Columns =
+        [
+            new TableColumn<Activity> { Header = "Image", Value = x => x.ImageName ?? "" },
+            new TableColumn<Activity> { Header = "Title", Value = x => x.Title }, 
+            new TableColumn<Activity> { Header = "Purchases", Value = x => x.Purchases.Count },
+            new TableColumn<Activity> { Header = "Start Date", Value = x => x.EventStart },
+            new TableColumn<Activity> { Header = "End Date", Value = x => x.EventEnd }
+        ]
+    };
+}
 
 <div>
-    <h4>Organizer</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
-</div>
-<div class="w-x d-flex justify-content-sm-between align-items-center">
-    <a asp-action="Edit" asp-route-id="@Model?.OrganizerId"><img src="/assets/svg/edit.svg" width=@string.Concat(imgWidth, "px") /></a>
-    <a asp-action="Index"><img src="~/assets/svg/back.svg" width=@string.Concat(imgWidth + 20, "px") alt="Back"></a>
+   @await Html.PartialAsync("_Table", table)
 </div>

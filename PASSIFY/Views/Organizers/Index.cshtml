@@ -2,37 +2,82 @@
 
 @{
     ViewData["Title"] = "Index";
-    var imgWidth = "15px";
 }
 
-<h1>Organizers Database</h1>
+<div class="flex justify-between items-center">
+    <h1>Organizers Database</h1>
+    <div>
+        <a class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300" asp-action="Create">Create New</a>
+    </div>
+</div>
 
-<p>
-    <a class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300" asp-action="Create">Create New</a>
-</p>
-<table class="w-1/4 border-collapse mt-4">
-    <thead class="bg-gray-200">
-        <tr>
-            <th class="p-2 text-left border-b">
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th class="p-2 border-b"></th>
-        </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200">
-@foreach (var item in Model) {
-        <tr data-id="@item.OrganizerId" class="hover:bg-gray-50">
-            <td class="p-2">
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td class="p-2">
-                    <div class="flex flex-row justify-between actions">
-                <a asp-action="Edit" asp-route-id="@item.OrganizerId"><img src="~/assets/svg/edit.svg" width=@imgWidth/></a>
-                    <a asp-action="Details" asp-route-id="@item.OrganizerId"><img src="~/assets/svg/details.svg" width=@imgWidth /></a>
-                    <a asp-action="Delete" asp-route-id="@item.OrganizerId"><img src="~/assets/svg/delete.svg" width=@imgWidth /></a>
-                    </div>
-            </td>
-        </tr>
+@{
+    var organizersTable = new TableViewModel<Organizer>
+    {
+        Items = Model ?? [],
+        Id = item => item.OrganizerId,
+        ShowActions = true,
+        Columns =
+        [
+            new TableColumn<Organizer> { Header = "Name", Value = item => item.Name ?? "" },
+            new TableColumn<Organizer> { Header = "Events", Value = item => item.Activities?.Count ?? 0 },
+        ]
+    };
 }
-    </tbody>
-</table>
+
+<div>
+    @await Html.PartialAsync("_Table", organizersTable)
+</div>
+
+@* <table class="w-full border-collapse mt-4"> *@
+@*     <thead class="bg-gray-200"> *@
+@*         <tr class="text-gray-600 uppercase text-sm leading-normal border-b *:p-2"> *@
+@*             <th class="text-left"> *@
+@*                 @Html.DisplayNameFor(model => model.Name) *@
+@*             </th> *@
+@*             <th>Events</th> *@
+@*             <th class="">Actions</th> *@
+@*         </tr> *@
+@*     </thead> *@
+@*     <tbody class="divide-y divide-gray-200"> *@
+@* @foreach (var item in Model) { *@
+@*         <tr data-id="@item.OrganizerId" class="hover:bg-gray-50 *:p-2"> *@
+@*             <td class=""> *@
+@*                 @Html.DisplayFor(modelItem => item.Name) *@
+@*             </td> *@
+@*             <td> *@
+@*                 @if (item.Activities != null) *@
+@*                 { *@
+@*                     @item.Activities.Count *@
+@*                 } *@
+@*                 else *@
+@*                 { *@
+@*                     <span class="text-red-500">0</span> *@
+@*                 } *@
+@*                  *@
+@*             </td> *@
+@*             <td class=""> *@
+@*                 <div class="flex flex-row justify-between actions w-1/4"> *@
+@*                     <a asp-action="Edit" asp-route-id="@item.OrganizerId"> *@
+@*                         <svg class="w-6 h-6"> *@
+@*                             <use href="@Helpers.SvgPath("edit")"/> *@
+@*                         </svg> *@
+@*                     </a> *@
+@*                      *@
+@*                     <a asp-action="Details" asp-route-id="@item.OrganizerId"> *@
+@*                         <svg class="w-6 h-6"> *@
+@*                             <use href="@Helpers.SvgPath("details")"/> *@
+@*                         </svg> *@
+@*                     </a> *@
+@*                      *@
+@*                     <a asp-action="Delete" asp-route-id="@item.OrganizerId"> *@
+@*                         <svg class="w-6 h-6"> *@
+@*                             <use href="@Helpers.SvgPath("delete")"/> *@
+@*                         </svg> *@
+@*                     </a> *@
+@*                 </div> *@
+@*             </td> *@
+@*         </tr> *@
+@* } *@
+@*     </tbody> *@
+@* </table> *@
