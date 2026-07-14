@@ -1,0 +1,65 @@
+@model dynamic
+
+<table class="w-full border-collapse">
+        <thead class="bg-gray-200">
+        <tr>
+           @foreach (var column in Model.Columns)
+           {
+               <th class="p-2 text-left">
+                   @column.Header
+               </th>
+           }
+           @if(Model.ShowActions)
+           {
+               <th class="">Actions</th>
+           }
+        </tr>
+        </thead>
+        
+        <tbody class="divide-y divide-gray-200">
+            @foreach (var item in Model.Items)
+            {
+                <tr class="hover:bg-gray-100 cursor-pointer align-middle" data-id="@Model.Id(item)">
+                   @foreach (var column in Model.Columns)
+                   {
+                       @if(column.Header.Equals("Image"))
+                       {
+                           <td class="flex justify-center p-2">
+                               <img src="@Url.Content(item.ImageName ?? "/assets/photos/placeholder.jpg")" alt="" class="img-thumb">
+                           </td>
+                       }
+                       else
+                       {
+                           <td class="p-2">
+                               @column.Value(item)
+                           </td>
+                       }
+                   }
+                   @if(Model.ShowActions)
+                   {
+                       <td class="">
+                           <div class="flex flex-row  justify-between actions w-1/4">
+                               <a asp-action="Edit" asp-route-id="@Model.Id(item)">
+                                   <svg class="w-6 h-6">
+                                       <use href="@Helpers.SvgPath("edit")"/>
+                                   </svg>
+                               </a>
+
+                               <a asp-action="Details" asp-route-id="@Model.Id(item)">
+                                   <svg class="w-6 h-6">
+                                       <use href="@Helpers.SvgPath("details")"/>
+                                   </svg>
+                               </a>
+
+                               <a asp-action="Delete" asp-route-id="@Model.Id(item)">
+                                   <svg class="w-6 h-6">
+                                       <use href="@Helpers.SvgPath("delete")"/>
+                                   </svg>
+                               </a>
+                           </div>
+                       </td>
+                   }
+                </tr>
+            }
+        </tbody>
+</table>
