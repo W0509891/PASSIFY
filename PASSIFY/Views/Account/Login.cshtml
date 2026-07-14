@@ -2,16 +2,14 @@
     ViewData["Title"] = "Login";
     Layout = null;
 }
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/styles.css" asp-append-version="true"/>
 <link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true"/>
 @* <link rel="stylesheet" href="~/PASSIFY.styles.css" asp-append-version="true"/> *@
 
 
-<div class="flex justify-around min-h-screen">
+<div class="flex  min-h-screen">
     <aside class="w-3/4 bg-gray-500 border-r"></aside>
-    <aside class="w-1/4 flex flex-col justify-center items-center px-4">
-    
-        
+    <aside class="min-w-1/4 flex flex-col justify-center items-center px-4 bg-blue-500">
         <div class="border border-black w-full p-6 rounded-lg shadow-lg">
             @if(ViewBag.ErrorMessage != null)
             {
