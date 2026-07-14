@@ -1,11 +1,37 @@
-﻿<!DOCTYPE html>
+﻿@using PASSIFY.Controllers
+@{
+    var sidebarItems = new List<NavItem>
+    {
+        new()
+        {
+            Controller = "Home",
+            Action = "Index",
+            Text = "Home",
+            Icon = "organizer"
+        },  
+        new() {
+            Controller = "Organizers",
+            Action = "Index",
+            Text = "Organizers",
+            Icon = "organizer"
+        },
+        new()
+        {
+            Controller = "Categories",
+            Action = "Index",
+            Text = "Categories",
+            Icon = "event"
+        }
+    }; 
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - PASSIFY</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true"/>
 </head>
@@ -13,81 +39,69 @@
 
 
 
-    <div class="flex flex-col flex-grow min-h-screen bg-white'">
+    <div class="flex flex-col grow min-h-screen bg-white'">
           
             <!--Start Navbar-->
-        <nav class="sticky top-0 bg-white border-b shadow-sm z-10">
+        <nav class="sticky top-0 bg-white  shadow-sm z-10">
             <div class="container mx-auto px-5">
                 <div id="for-end" class="flex flex-row-reverse sm:flex-row items-center">
+                    <div>
+                        @*Logo*@
+                        <a class="py-2 px-3 text-gray-800" asp-area="" asp-controller="Home"
+                           asp-action="Index">PASSIFY</a>
+                    </div>
                     @*Login/Logout*@
                     <div class="flex ml-auto items-center">
                         @if (User.Identity != null)
                         {
                             @if (User.Identity.IsAuthenticated)
                             {
-                                    <div>
-                                        <p class="p-3">Hello, <span class="text-blue-600">@User.Identity.Name</span></p>
-                                    </div>
+                                <div>
+                                    <p class="p-3">Hello, <span class="text-blue-600">@User.Identity.Name</span></p>
+                                </div>
                                 <div >
-                                    <a class="p-3 text-gray-800 hover:bg-amber-500 transition-colors duration-300" asp-action="Logout"
-                                    asp-controller="Account">Logout</a>
+                                    <button class="p-3 text-gray-800 hover:bg-amber-500 transition-colors duration-300" asp-action="Logout"
+                                            asp-controller="Account">Logout</button>
                                 </div>
                             }
                         }
                         else
                         {
-                            <div class="nav-item"><a class="block py-2 px-3 text-gray-800" asp-action="Login"
-                                                    asp-controller="Account">Login</a></div>
+                            <div class="nav-item">
+                                <a class="block py-2 px-3 text-gray-800" asp-action="Login"
+                                   asp-controller="Account">Login</a></div>
                         }
                     </div>
                 </div>
-
-                @*Search Bar cancelled for now*@
-                @* <form class="form-inline my-2 my-lg-0"> *@
-                @*     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> *@
-                @*     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> *@
-                @* </form> *@
+                
             </div>
         </nav>
         <!--End Navbar-->
 
-        <div class="flex flex-row">
+        <div class="flex flex-row overflow-hidden">
 
             @*side bar nav *@
-            <aside class="flex flex-col shrink-0 test-sidebar min-h-screen border-r">
+            <aside class="fixed flex flex-col shrink-0 test-sidebar min-h-screen bg-gray-100 shadow-sm">
 
                 <!--Sidebar-->
                 @*List of Nav links and their logos*@
                 <ul class="flex flex-col mb-auto text-center">
-
-                    <li>
-                        @*Main Logo*@
-                        <a class="block p-3 text-gray-800 border-b text-center" title="" data-bs-toggle="tooltip"
-                           data-bs-placement="right" data-bs-original-title="Icon-only" asp-area="" asp-controller="Home"
-                           asp-action="Index">PASSIFY</a>
-                    </li>
-                    @*Item 1*@
-                    <li class="hover:bg-amber-500">
-                        <a asp-controller="Organizers" asp-action="Index"
-                           class="block text-gray-800 no-underline p-3 flex flex-col items-center" title=""
+                    
+                @foreach (var item in sidebarItems)
+                {
+                    <li class="hover:bg-gray-300">
+                        <a asp-controller="@item.Controller" asp-action="@item.Action"
+                           class="text-gray-800 no-underline p-3 flex flex-col items-center" title=""
                            data-bs-toggle="tooltip"
                            data-bs-placement="right" data-bs-original-title="Dashboard">
-                            <img src="~/assets/svg/organizer.svg" alt="" width="30" height="30" class="mb-2" />
-                            <span>Organizers</span>
+                            <svg class="mb-2 w-5 h-5">
+                                <use href="@item.Icon"/>
+                            </svg>
+                            <span>@item.Text</span>
                         </a>
                     </li>
-
-                    @*Item 2*@
-                    <li class="hover:bg-amber-50">
-                        <a asp-action="Index" asp-controller="Categories"
-                           class="block text-gray-800 no-underline p-3 flex flex-col items-center" title=""
-                           data-bs-toggle="tooltip"
-                           data-bs-placement="right" data-bs-original-title="Orders">
-                            <img src="~/assets/svg/cat_tag.svg" alt="" width="30" height="30" class="mb-2" />
-                            <span>Categories</span>
-                        </a>
-                    </li>
-
+                }
+                    
                     @*Copy item n if extra needed*@
                 </ul>
             </aside>
