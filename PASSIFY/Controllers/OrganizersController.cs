@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 using PASSIFY.Data;
 using PASSIFY.Models;
 
@@ -24,7 +25,8 @@ namespace PASSIFY.Controllers;
         // GET: Organizers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Organizer.ToListAsync());
+            var orgList = await _context.Organizer.Include(o => o.Activities ).ToListAsync();
+            return View(orgList);
         }
 
         // GET: Organizers/Details/5
@@ -36,6 +38,8 @@ namespace PASSIFY.Controllers;
             }
 
             var organizer = await _context.Organizer
+                .Include(o => o.Activities)!
+                    .ThenInclude(p=>p.Purchases)
                 .FirstOrDefaultAsync(m => m.OrganizerId == id);
             if (organizer == null)
             {

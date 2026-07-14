@@ -2,40 +2,30 @@
 
 @{
     ViewData["Title"] = "Index";
-    var imgWidth = "15px";
-    
 }
 
-<h1>Categories Database</h1>
+<div class="flex justify-between items-center">
+    <h1>Categories Database</h1>
+    <div>
+        <a class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300" asp-action="Create">Create New</a>
+    </div>
+</div>
 
-<p>
-    <a class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300" asp-action="Create">Create New</a>
-</p>
-<table class="w-1/4 border-collapse mt-4">
-    <thead class="bg-gray-200">
-        <tr>
-            <th class="p-2 text-left border-b">
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th class="p-2 border-b"></th>
-        </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200">
-@foreach (var item in Model) {
-        <tr data-id="@item.CategoryId" class="hover:bg-gray-50">
-            <td class="p-2">
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td class="p-2">
-                <div class="flex flex-row justify-between">
-                <a asp-action="Edit" asp-route-id="@item.CategoryId"><img src="assets/svg/edit.svg" width=@imgWidth/></a> 
-                <a asp-action="Details" asp-route-id="@item.CategoryId"><img src="assets/svg/details.svg" width="@imgWidth"> </a> 
-                <a asp-action="Delete" asp-route-id="@item.CategoryId"><img src="assets/svg/delete.svg" alt="" width="@imgWidth"></a>
-
-                </div>
-
-            </td>
-        </tr>
+@{
+    var categoryTable = new TableViewModel<Category>
+    {
+        Items = Model ?? [],
+        Id = item => item.CategoryId,
+        ShowActions = true,
+        Columns =
+        [
+            new TableColumn<Category> { Header = "Title", Value = item => item.Title ?? "" },
+            new TableColumn<Category> { Header = "Events", Value = item => item.Activities?.Count},
+        ]
+    };
 }
-    </tbody>
-</table>
+
+<div>
+    @await Html.PartialAsync("_Table", categoryTable)
+</div>
+

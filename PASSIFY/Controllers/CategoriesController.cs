@@ -24,7 +24,10 @@ namespace PASSIFY.Controllers;
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Category.ToListAsync());
+            return View(await _context.Category
+                .Include(c =>  c.Activities)!
+                .ThenInclude(a => a.Organizer)
+                .ToListAsync());
         }
 
         // GET: Categories/Details/5
@@ -36,6 +39,8 @@ namespace PASSIFY.Controllers;
             }
 
             var category = await _context.Category
+                .Include(c => c.Activities)!
+                    .ThenInclude(a => a.Purchases)
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
             if (category == null)
             {
