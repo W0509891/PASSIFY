@@ -1,0 +1,19 @@
+@model Dictionary<string, dynamic>
+
+
+<div class="px-6 py-8">
+    <div class="flex items-center gap-4">
+        <a asp-action="Index" class="text-gray-500 hover:text-gray-900 transition p-2 hover:bg-gray-100 rounded-full">
+            <svg class="w-6 h-6">
+                <use href="@Helpers.SvgPath("back")" />
+            </svg>
+        </a>
+        <h1 class="text-3xl font-bold text-gray-900">Details for @Model.GetValueOrDefault("Title")</h1>
+        <a asp-action="Edit" asp-route-id="@Model.GetValueOrDefault("Id")" class="text-blue-600 hover:text-blue-800 transition p-2 hover:bg-blue-50 rounded-full ml-auto">
+            <svg class="w-6 h-6">
+                <use href="@Helpers.SvgPath("edit")" />
+            </svg>
+        </a>
+    </div>
+    <p class="text-gray-500 mt-2 ml-14">Details and activities for this @Model.GetValueOrDefault("Type").</p>
+</div>

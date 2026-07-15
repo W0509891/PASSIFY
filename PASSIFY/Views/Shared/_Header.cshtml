@@ -1,0 +1,17 @@
+@using Humanizer
+@model string
+<div class="px-6 py-8">
+    <h1 class="text-3xl font-bold text-gray-900">@Model.Titleize()</h1>
+    <p class="text-gray-500 mt-2">Manage your event @Model.ToLower().</p>
+</div>
+
+<section class="sticky top-0 bg-white p-4 shadow-sm z-20 border-b border-gray-100 flex justify-between items-center" id="action-section">
+    <div class="flex-1">
+        <input type="text" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none w-64"
+               oninput="searchTable(this.value)"
+               placeholder="Search @Model.ToLower()..."/>
+    </div>
+    <div>
+        <a class="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition" asp-action="Create">Create New @Model.Titleize()</a>
+    </div>
+</section>

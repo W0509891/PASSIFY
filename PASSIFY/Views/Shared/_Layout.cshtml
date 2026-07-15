@@ -7,9 +7,10 @@
             Controller = "Home",
             Action = "Index",
             Text = "Home",
-            Icon = "organizer"
-        },  
-        new() {
+            Icon = "home"
+        },
+        new()
+        {
             Controller = "Organizers",
             Action = "Index",
             Text = "Organizers",
@@ -20,9 +21,16 @@
             Controller = "Categories",
             Action = "Index",
             Text = "Categories",
-            Icon = "event"
+            Icon = "cat_tag"
+        },
+        new()
+        {
+            Controller = "Purchases",
+            Action = "Index",
+            Text = "Purchases",
+            Icon = "dollar_sign"
         }
-    }; 
+    };
 }
 
 <!DOCTYPE html>
@@ -32,97 +40,167 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - PASSIFY</title>
     <script type="importmap"></script>
+    <link rel="icon" type="image/svg" href="@ViewBag.favicon"/>
     <link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true"/>
 </head>
 <body>
 
 
+<div class="flex flex-col grow h-screen bg-white">
 
-    <div class="flex flex-col grow min-h-screen bg-white'">
-          
-            <!--Start Navbar-->
-        <nav class="sticky top-0 bg-white  shadow-sm z-10">
-            <div class="container mx-auto px-5">
-                <div id="for-end" class="flex flex-row-reverse sm:flex-row items-center">
-                    <div>
-                        @*Logo*@
-                        <a class="py-2 px-3 text-gray-800" asp-area="" asp-controller="Home"
-                           asp-action="Index">PASSIFY</a>
-                    </div>
-                    @*Login/Logout*@
-                    <div class="flex ml-auto items-center">
-                        @if (User.Identity != null)
-                        {
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                                <div>
-                                    <p class="p-3">Hello, <span class="text-blue-600">@User.Identity.Name</span></p>
-                                </div>
-                                <div >
-                                    <button class="p-3 text-gray-800 hover:bg-amber-500 transition-colors duration-300" asp-action="Logout"
-                                            asp-controller="Account">Logout</button>
-                                </div>
+    <!--Start Navbar-->
+    <nav class="bg-white border-b border-gray-200 z-10 shrink-0">
+        <div class="px-5">
+            <div id="for-end" class="flex items-center h-16">
+                <div id="breads">
+                    @*Logo*@
+                    <a class="text-lg font-bold text-gray-900 tracking-tight" asp-area="" asp-controller="Home"
+                       asp-action="Index">
+                        <svg class="w-6 h-6 inline-block">
+                            <use href="@Helpers.SvgPath("passify")"/>
+                        </svg>
+                        <span class="text-blue-600">ADMIN</span>
+                    </a>
+                </div>
+                <script>
+                    (function () {
+                        var anchors = [];
+                        var span = document.createElement("span");
+                        span.innerHTML = " / ";
+                        span.className = "mx-2 text-gray-400";
+
+                        function makeAnchor(href, text) {
+                            var anchor = document.createElement("a");
+                            anchor.href = href;
+                            anchor.innerHTML = text;
+                            anchor.className = "text-gray-700 hover:text-blue-600 transition-colors duration-200";
+                            return anchor;
+                        }
+
+                        function makeAnchorLinks() {
+                            var pathSegments = window.location.pathname.split("/").filter(function (segment) {
+                                return segment.length > 0;
+                            });
+
+                            var urls = [];
+                            for (var i = 0; i < pathSegments.length; i++) {
+                                if (i === 0) {
+                                    urls[i] = "/" + pathSegments[i];
+                                } else {
+                                    urls[i] = urls[i - 1] + "/" + pathSegments[i];
+                                }
+
+                                anchors.push(makeAnchor(urls[i], pathSegments[i]));
                             }
                         }
-                        else
-                        {
-                            <div class="nav-item">
-                                <a class="block py-2 px-3 text-gray-800" asp-action="Login"
-                                   asp-controller="Account">Login</a></div>
+
+                        makeAnchorLinks();
+
+                        var breadsContainer = document.querySelector("#breads");
+                        if (breadsContainer && anchors.length > 0) {
+                            anchors.forEach(function (anchor, index) {
+                                if (index > 0) {
+                                    breadsContainer.appendChild(span.cloneNode(true));
+                                } else {
+                                    var firstSeparator = span.cloneNode(true);
+                                    breadsContainer.appendChild(firstSeparator);
+                                }
+                                breadsContainer.appendChild(anchor);
+                            });
                         }
-                    </div>
+                    })();
+                </script>
+                @*Login/Logout*@
+                <div class="flex ml-auto items-center text-sm font-medium text-gray-700">
+                    @if (User.Identity != null)
+                    {
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div>
+                                <p class="p-3"><span id="greeting"></span>, <span
+                                        class="text-blue-600">@User.Identity.Name</span></p>
+                                <script async>
+                                    const greeting = () => {
+                                        const hour = new Date().getHours();
+                                        if (hour < 12) {
+                                            return "Good morning";
+                                        } else if (hour < 18) {
+                                            return "Good afternoon";
+                                        } else {
+                                            return "Good evening";
+                                        }
+                                    }
+                                    console.log(greeting());
+                                    document.getElementById("greeting").innerHTML = greeting();
+                                </script>
+                            </div>
+                            <div
+                                class="transition-colors duration-300 hover:text-red-400 hover:bg-gray-300 rounded-md px-5 py-3">
+                                <a
+                                    asp-action="Logout"
+                                    asp-controller="Account">Logout
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="nav-item">
+                            <a class="block py-2 px-3 text-gray-800 " asp-action="Login"
+                               asp-controller="Account">Login</a></div>
+                    }
                 </div>
-                
             </div>
-        </nav>
-        <!--End Navbar-->
 
-        <div class="flex flex-row overflow-hidden">
+        </div>
+    </nav>
+    <!--End Navbar-->
 
-            @*side bar nav *@
-            <aside class="fixed flex flex-col shrink-0 test-sidebar min-h-screen bg-gray-100 shadow-sm">
+    <div class="flex flex-grow overflow-hidden">
 
-                <!--Sidebar-->
-                @*List of Nav links and their logos*@
-                <ul class="flex flex-col mb-auto text-center">
-                    
+        @*side bar nav *@
+        <aside class="w-24 flex flex-col shrink-0 bg-white border-r border-gray-200">
+
+            <!--Sidebar-->
+            @*List of Nav links and their logos*@
+            <ul class="flex flex-col mb-auto mt-4 px-2">
+
                 @foreach (var item in sidebarItems)
                 {
-                    <li class="hover:bg-gray-300">
+                    <li class="mb-1">
                         <a asp-controller="@item.Controller" asp-action="@item.Action"
-                           class="text-gray-800 no-underline p-3 flex flex-col items-center" title=""
-                           data-bs-toggle="tooltip"
-                           data-bs-placement="right" data-bs-original-title="Dashboard">
-                            <svg class="mb-2 w-5 h-5">
+                           class="text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200 rounded-xl p-3 flex flex-col items-center"
+                           title="@item.Text">
+                            <svg class="mb-1 w-6 h-6">
                                 <use href="@item.Icon"/>
                             </svg>
-                            <span>@item.Text</span>
+                            <span class="text-[10px] font-medium">@item.Text</span>
                         </a>
                     </li>
                 }
-                    
-                    @*Copy item n if extra needed*@
-                </ul>
-            </aside>
-            <!--End Sidebar-->
 
-            <div class="container mx-auto mt-1 px-4">
+                @*Copy item n if extra needed*@
+            </ul>
+        </aside>
+        <!--End Sidebar-->
 
-                <main role="main" class="pb-3">
-                    @RenderBody()
-                </main>
-            </div>
+        <div class="flex-1 mt-1 px-4 overflow-y-auto">
+
+            <main role="main" class="pb-3 w-full">
+                @RenderBody()
+            </main>
         </div>
-
     </div>
+
+</div>
 
 
 
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

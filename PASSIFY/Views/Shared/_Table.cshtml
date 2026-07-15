@@ -1,58 +1,66 @@
 @model dynamic
 
-<table class="w-full border-collapse">
-        <thead class="bg-gray-200">
-        <tr>
+<div class="overflow-hidden border border-gray-400 rounded-lg">
+<table class="w-full text-left border-collapse">
+        <thead class="bg-gray-50">
+        <tr class="sticky top-0 bg-gray-700 z-10">
            @foreach (var column in Model.Columns)
            {
-               <th class="p-2 text-left">
+               <th class="px-6 py-3 text-xs font-semibold tracking-wider text-gray-500 uppercase ">
                    @column.Header
                </th>
            }
            @if(Model.ShowActions)
            {
-               <th class="">Actions</th>
+               <th class="px-6 py-3 text-xs font-semibold tracking-wider text-gray-500 uppercase">Actions</th>
            }
         </tr>
         </thead>
         
-        <tbody class="divide-y divide-gray-200">
+        <tbody class="divide-y divide-gray-200 bg-white">
             @foreach (var item in Model.Items)
             {
-                <tr class="hover:bg-gray-100 cursor-pointer align-middle" data-id="@Model.Id(item)">
+                <tr class="transition-colors hover:bg-gray-50 cursor-pointer" data-id="@Model.Id(item)">
                    @foreach (var column in Model.Columns)
                    {
                        @if(column.Header.Equals("Image"))
                        {
-                           <td class="flex justify-center p-2">
-                               <img src="@Url.Content(item.ImageName ?? "/assets/photos/placeholder.jpg")" alt="" class="img-thumb">
+                           <td class="px-6 py-4 whitespace-nowrap">
+                               <img src="@Url.Content(item.ImageName ?? "/assets/photos/placeholder.jpg")" alt="" class="w-12 h-12 rounded-lg object-cover">
+                           </td>
+                       }
+                       else if(column.Header.Equals("Purchases"))
+                       {
+                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                               <a class="text-blue-600 hover:text-blue-800 font-medium" asp-action="Purchases" asp-route-id="@Model.Id(item)"
+                                  asp-controller="Activities"> @column.Value(item)</a>
                            </td>
                        }
                        else
                        {
-                           <td class="p-2">
+                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                @column.Value(item)
                            </td>
                        }
                    }
                    @if(Model.ShowActions)
                    {
-                       <td class="">
-                           <div class="flex flex-row  justify-between actions w-1/4">
-                               <a asp-action="Edit" asp-route-id="@Model.Id(item)">
-                                   <svg class="w-6 h-6">
+                       <td class="px-6 py-4 whitespace-nowrap text-sm">
+                           <div class="flex flex-row items-center gap-3 actions text-gray-400">
+                               <a asp-action="Edit" asp-route-id="@Model.Id(item)" class="hover:text-blue-600">
+                                   <svg class="w-5 h-5">
                                        <use href="@Helpers.SvgPath("edit")"/>
                                    </svg>
                                </a>
 
-                               <a asp-action="Details" asp-route-id="@Model.Id(item)">
-                                   <svg class="w-6 h-6">
+                               <a asp-action="Details" asp-route-id="@Model.Id(item)" class="hover:text-gray-900">
+                                   <svg class="w-5 h-5">
                                        <use href="@Helpers.SvgPath("details")"/>
                                    </svg>
                                </a>
 
-                               <a asp-action="Delete" asp-route-id="@Model.Id(item)">
-                                   <svg class="w-6 h-6">
+                               <a asp-action="Delete" asp-route-id="@Model.Id(item)" class="hover:text-red-600">
+                                   <svg class="w-5 h-5">
                                        <use href="@Helpers.SvgPath("delete")"/>
                                    </svg>
                                </a>
@@ -63,3 +71,4 @@
             }
         </tbody>
 </table>
+</div>
