@@ -1,0 +1,49 @@
+@model int
+
+@{
+    ViewData["Title"] = $"Error {Model}";
+}
+
+<div class="flex flex-col items-center justify-center h-full text-center py-20">
+    <h1 class="text-9xl font-black text-gray-200">@Model</h1>
+    <h2 class="text-3xl font-bold text-gray-800 mt-4">
+        @switch (Model)
+        {
+            case 404:
+                @:Page Not Found
+                break;
+            case 403:
+                @:Access Denied
+                break;
+            case 400:
+                @:Bad Request
+                break;
+            case 500:
+                @:Internal Server Error
+                break;
+            default:
+                @:An error occurred
+                break;
+        }
+    </h2>
+    <p class="mt-4 text-gray-600">
+        @switch (Model)
+        {
+            case 404:
+                @:The page you are looking for might have been removed or is temporarily unavailable.
+                break;
+            case 403:
+                @:You do not have permission to view this page.
+                break;
+            case 500:
+                @:Something went wrong on our end. Please try again later.
+                break;
+            default:
+                @:An unexpected error occurred.
+                break;
+        }
+    </p>
+    <a asp-controller="Home" asp-action="Index" class="mt-8 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        Back to Dashboard
+    </a>
+</div>

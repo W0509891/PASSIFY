@@ -35,7 +35,7 @@ namespace PASSIFY.Controllers;
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
             var category = await _context.Category
@@ -77,7 +77,7 @@ namespace PASSIFY.Controllers;
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
             var category = await _context.Category.FindAsync(id);

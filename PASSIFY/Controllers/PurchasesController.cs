@@ -75,10 +75,11 @@ namespace PASSIFY
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
-            var purchase = await _context.Purchase.FindAsync(id);
+            var purchase = await _context.Purchase.Include(p => p.Activity)
+                .FirstOrDefaultAsync(p=> p.PurchaseId == id);
             if (purchase == null)
             {
                 return NotFound();

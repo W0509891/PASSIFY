@@ -34,7 +34,7 @@ namespace PASSIFY.Controllers;
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
             var organizer = await _context.Organizer
@@ -76,7 +76,7 @@ namespace PASSIFY.Controllers;
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
             var organizer = await _context.Organizer.FindAsync(id);

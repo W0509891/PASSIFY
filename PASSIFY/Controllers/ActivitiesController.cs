@@ -31,6 +31,13 @@ namespace PASSIFY.Controllers
             var containerName = "uploads";
             _containerClient = new BlobContainerClient(connectionString, containerName);
         }
+        
+        [HttpGet("/Activities/{id:int}")]
+        public IActionResult ShortUrl(int id)
+        {
+            return RedirectToAction(nameof(Details), new { id });
+        }
+        
          // GET: Activities/Create
         public IActionResult Create()
         {
@@ -92,7 +99,7 @@ namespace PASSIFY.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             var activity = await _context.Activity
@@ -108,9 +115,9 @@ namespace PASSIFY.Controllers
             return View(activity);
         }
         
-        // GET: Activities/Details/5/Purchases
-        [HttpGet("Activities/Details/{id}/Purchases")]
-        public async Task<IActionResult> ActivityPurchases(int? id)
+        // GET: Activities/5/Purchases
+        [HttpGet("Activities/{id}/Purchases")]
+        public async Task<IActionResult> Purchases(int? id)
         {
             if (id == null)
             {
@@ -134,7 +141,7 @@ namespace PASSIFY.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
             var activity = await _context.Activity.FindAsync(id);
