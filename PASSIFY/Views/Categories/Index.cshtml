@@ -1,15 +1,11 @@
 ﻿@model IEnumerable<PASSIFY.Models.Category>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Categories";
 }
 
-<div class="flex justify-between items-center">
-    <h1>Categories Database</h1>
-    <div>
-        <a class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300" asp-action="Create">Create New</a>
-    </div>
-</div>
+
+<partial name="_Header" model="@ViewBag.Title" />
 
 @{
     var categoryTable = new TableViewModel<Category>

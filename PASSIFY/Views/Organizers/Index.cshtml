@@ -1,15 +1,10 @@
 ﻿@model IEnumerable<PASSIFY.Models.Organizer>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Organizers";
 }
 
-<div class="flex justify-between items-center">
-    <h1>Organizers Database</h1>
-    <div>
-        <a class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300" asp-action="Create">Create New</a>
-    </div>
-</div>
+<partial name="_Header" model="@ViewBag.Title" />
 
 @{
     var organizersTable = new TableViewModel<Organizer>
@@ -25,59 +20,6 @@
     };
 }
 
-<div>
+<div class="px-6 py-4">
     @await Html.PartialAsync("_Table", organizersTable)
 </div>
-
-@* <table class="w-full border-collapse mt-4"> *@
-@*     <thead class="bg-gray-200"> *@
-@*         <tr class="text-gray-600 uppercase text-sm leading-normal border-b *:p-2"> *@
-@*             <th class="text-left"> *@
-@*                 @Html.DisplayNameFor(model => model.Name) *@
-@*             </th> *@
-@*             <th>Events</th> *@
-@*             <th class="">Actions</th> *@
-@*         </tr> *@
-@*     </thead> *@
-@*     <tbody class="divide-y divide-gray-200"> *@
-@* @foreach (var item in Model) { *@
-@*         <tr data-id="@item.OrganizerId" class="hover:bg-gray-50 *:p-2"> *@
-@*             <td class=""> *@
-@*                 @Html.DisplayFor(modelItem => item.Name) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @if (item.Activities != null) *@
-@*                 { *@
-@*                     @item.Activities.Count *@
-@*                 } *@
-@*                 else *@
-@*                 { *@
-@*                     <span class="text-red-500">0</span> *@
-@*                 } *@
-@*                  *@
-@*             </td> *@
-@*             <td class=""> *@
-@*                 <div class="flex flex-row justify-between actions w-1/4"> *@
-@*                     <a asp-action="Edit" asp-route-id="@item.OrganizerId"> *@
-@*                         <svg class="w-6 h-6"> *@
-@*                             <use href="@Helpers.SvgPath("edit")"/> *@
-@*                         </svg> *@
-@*                     </a> *@
-@*                      *@
-@*                     <a asp-action="Details" asp-route-id="@item.OrganizerId"> *@
-@*                         <svg class="w-6 h-6"> *@
-@*                             <use href="@Helpers.SvgPath("details")"/> *@
-@*                         </svg> *@
-@*                     </a> *@
-@*                      *@
-@*                     <a asp-action="Delete" asp-route-id="@item.OrganizerId"> *@
-@*                         <svg class="w-6 h-6"> *@
-@*                             <use href="@Helpers.SvgPath("delete")"/> *@
-@*                         </svg> *@
-@*                     </a> *@
-@*                 </div> *@
-@*             </td> *@
-@*         </tr> *@
-@* } *@
-@*     </tbody> *@
-@* </table> *@

@@ -4,32 +4,33 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit Category</h1>
+<div class="px-6 py-8">
+    <h1 class="text-3xl font-bold text-gray-900">Edit Category</h1>
+    <p class="text-gray-500 mt-2">Update the category's information below.</p>
+</div>
 
-<div class="flex flex-row">
-
-    <div class="">
-        <form asp-action="Edit" class="flex flex-col">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="px-6 pb-8">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 max-w-2xl">
+        <form asp-action="Edit" class="space-y-4">
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm mb-4"></div>
             <input type="hidden" asp-for="CategoryId" />
-            <div class="flex flex-col mb-3">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+            
+            <div>
+                <label asp-for="Title" class="block text-sm font-medium text-gray-700"></label>
+                <input asp-for="Title" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                <span asp-validation-for="Title" class="text-red-500 text-xs"></span>
             </div>
-            <div class="flex gap-1 self-end">
-                <a asp-action="Index"
-                   class="bg-gray-400 font-bold py-2 px-4 rounded hover:bg-gray-700 transition duration-300 cursor-pointer"
-                >Back to List
-                </a>
-                <button class="bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300 cursor-pointer" >
-                    Save
-                </button>
+            
+            <div class="pt-4">
+                <input type="submit" value="Save Changes" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-700 transition duration-300 cursor-pointer" />
             </div>
         </form>
     </div>
 </div>
 
+<div class="px-6 pb-8">
+    <a asp-action="Index" class="text-gray-500 hover:text-gray-900 transition">← Back to List</a>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

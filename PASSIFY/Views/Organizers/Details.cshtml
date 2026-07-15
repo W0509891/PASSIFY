@@ -2,27 +2,16 @@
 
 @{
     ViewData["Title"] = "Details";
+    var data = new Dictionary<string, dynamic>
+    {
+        {"Title", @Model.Name},
+        {"Id", @Model.OrganizerId},
+        {"Type", "Organizers"}
+    };
 }
 
-<div class="flex gap-4 items-center">
-    
-<a asp-action="Index" class="bg-gray-300 hover:bg-gray-100 p-2 rounded-full">
-    <svg class="w-6 h-6">
-        <use href="@Helpers.SvgPath("back")" />
-    </svg>
-</a>
+@await Html.PartialAsync("_HeaderWithNav", @data)
 
-<h1>Details for @Html.DisplayFor(model => model.Name)</h1>
-</div>
-
-<div class="flex justify-between items-center">
-    <a asp-action="Edit" asp-route-id="@Model?.OrganizerId">
-        <svg class="w-6 h-6">
-            <use href="@Helpers.SvgPath("edit")" />
-        </svg>
-    </a>
-  
-</div>
 
 @{
     var table = new TableViewModel<Activity>

@@ -3,101 +3,66 @@
 
 @{
     ViewData["Title"] = "Home Page";
-    var imgWidth = "25px";
-
+    var activities = Model ?? new List<Activity>();
 }
 
-<div class="text-center p-3">
-    <h1 class="text-4xl">Welcome <span class="text-gray-500">@User.Identity.Name</span> to your Passify Dashboard</h1>
+<div class="px-6 py-8">
+    <h1 class="text-3xl font-bold text-gray-900">Welcome, <span class="text-blue-600">@User.Identity.Name</span></h1>
+    <p class="text-gray-500 mt-2">Manage your events, categories, and organizers.</p>
 </div>
 
-<section class="flex justify-end p-1" id="add-section">
-    <div class="flex justify-between">
+<section class="sticky top-0 bg-white p-4 shadow-sm z-20 border-b border-gray-100 flex justify-between items-center" id="add-section">
+    <div class="flex-1">
+        <input type="text" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none w-64" 
+               oninput="searchTable(this.value)"
+               placeholder="Search activities..."/>
+    </div>
+    <div class="flex items-center gap-4">
         @* Add event *@
-        <a asp-controller="Activities" asp-action="Create" class="m-2 text-gray-800 no-underline flex flex-col items-center">
-            <img src="assets/svg/event.svg" width="@imgWidth" alt="Add Event Icon">
-            <span style="">Add event</span>
+        <a asp-controller="Activities" asp-action="Create"
+           class="text-gray-600 hover:text-blue-600 flex flex-col items-center p-2 rounded-lg hover:bg-blue-50 transition">
+            <svg class="w-6 h-6">
+                <use href="@Helpers.SvgPath("event")"/>
+            </svg>
+            <span class="text-xs font-medium">Add event</span>
         </a>
         @* Add Category *@
-        <a asp-controller="Categories" asp-action="Create" class="m-2 text-gray-800 no-underline flex flex-col items-center">
-            <img src="assets/svg/cat_tag.svg" width="@imgWidth" alt="Add Category Icon"/>
-            <span>Add category</span>
+        <a asp-controller="Categories" asp-action="Create"
+           class="text-gray-600 hover:text-blue-600 flex flex-col items-center p-2 rounded-lg hover:bg-blue-50 transition">
+            <svg class="w-6 h-6">
+                <use href="@Helpers.SvgPath("cat_tag")"/>
+            </svg>
+            <span class="text-xs font-medium">Add category</span>
         </a>
-        <a asp-controller="Organizers" asp-action="Create" class="m-2 text-gray-800 no-underline flex flex-col items-center">
-            <img src="assets/svg/organizer.svg" width="@imgWidth" alt="Add Organizer Icon"/>
-            <span>Add organizer</span>       
+        <a asp-controller="Organizers" asp-action="Create"
+           class="text-gray-600 hover:text-blue-600 flex flex-col items-center p-2 rounded-lg hover:bg-blue-50 transition">
+            <svg class="w-6 h-6">
+                <use href="@Helpers.SvgPath("organizer")"/>
+            </svg>
+            <span class="text-xs font-medium">Add organizer</span>
         </a>
     </div>
 </section>
 
+@{
+    var eventsTable = new TableViewModel<Activity>
+    {
+        Items = Model ?? [],
+        Id = x => x.ActivityId,
+        Columns =
+        [
+            new TableColumn<Activity> { Header = "Image", Value = x => x.ImageName ?? "" },
+            new TableColumn<Activity> { Header = "Title", Value = x => x.Title }, 
+            new TableColumn<Activity> { Header = "Description", Value = x => x.Description },
+            new TableColumn<Activity> { Header = "Start", Value = x => x.EventStart },
+            new TableColumn<Activity> { Header = "End", Value = x => x.EventEnd },
+            new TableColumn<Activity> { Header = "Created", Value = x => x.Created},
+            new TableColumn<Activity> { Header = "Organizer", Value = x => x.Organizer.Name }
+        ]
+    };
+}
 
 @*TODO: convert table to div layout*@
 <section class="p-2">
-    <table class="w-full border-collapse">
-        <thead class="bg-gray-200">
-        <tr>
-            <th class="p-2 text-left">
-                @Html.DisplayNameFor(model => model.FormFile)
-            </th>
-            <th class="p-2 text-left">
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th class="p-2 text-left">
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th class="p-2 text-left">
-                @Html.DisplayNameFor(model => model.EventStart)
-            </th>
-            <th class="p-2 text-left">
-                @Html.DisplayNameFor(model => model.EventEnd)
-            </th>
-            <th class="p-2 text-left">
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th class="p-2 text-left">
-                @Html.DisplayNameFor(model => model.Organizer)
-            </th>
-        </tr>
-        </thead>
-        
-        <tbody class="divide-y divide-gray-200">
-            @foreach (var item in Model)
-            {
-                <tr data-title="@item.Title" data-id="@item.ActivityId" class="hover:bg-gray-100 cursor-pointer align-middle">
-                    <td class="flex justify-center p-2">
-                        @if(string.IsNullOrWhiteSpace(item.ImageName))
-                        {
-                            <img src="@Url.Content("~/assets/photos/placeholder.jpg")" alt="" class="img-thumb">
-                        }
-                        else
-                        {
-                            <img src="@Url.Content(item.ImageName)" alt="" class="img-thumb">
-
-                        }
-
-                    </td>
-                    <td class="p-2">
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td class="p-2">
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td class="p-2">
-                        @Html.DisplayFor(modelItem => item.EventStart)
-                    </td>
-                    <td class="p-2">
-                        @Html.DisplayFor(modelItem => item.EventEnd)
-                    </td>
-                    <td class="p-2">
-                        @Html.DisplayFor(modelItem => item.Created)
-                    </td>
-                    <td class="p-2">
-                        @Html.DisplayFor(modelItem => item.Organizer.Name)
-                    </td>
-
-                </tr>
-            }
-        </tbody>
-    </table>
-
+    @await Html.PartialAsync("_Table", eventsTable)
 </section>

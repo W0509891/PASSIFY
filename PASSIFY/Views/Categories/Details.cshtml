@@ -2,34 +2,24 @@
 
 @{
     ViewData["Title"] = "Details";
-    var imgWidth = 30;
+    var data = new Dictionary<string, dynamic>
+    {
+        {"Title", @Model.Title},
+        {"Id", @Model.CategoryId},
+        {"Type", "Category"}
+    };
+
+    // Console.WriteLine(data.GetValueOrDefault());
 }
 
-<div class="flex gap-4 items-center">
-    
-    <a asp-action="Index" class="bg-gray-300 hover:bg-gray-100 p-2 rounded-full">
-        <svg class="w-6 h-6">
-            <use href="@Helpers.SvgPath("back")" />
-        </svg>
-    </a>
-
-    <h1>Details for @Html.DisplayFor(model => model.Title)</h1>
-</div>
-
-<div class="flex justify-between items-center">
-    <a asp-action="Edit" asp-route-id="@Model?.CategoryId">
-        <svg class="w-6 h-6">
-            <use href="@Helpers.SvgPath("edit")" />
-        </svg>
-    </a>
-  
-</div>
+@await Html.PartialAsync("_HeaderWithNav", @data)
 
 @{
     var table = new TableViewModel<Activity>
     {
         Items = Model.Activities ?? [],
         Id = x => x.ActivityId,
+        ShowActions = false,
         Columns =
         [
             new TableColumn<Activity> { Header = "Image", Value = x => x.ImageName ?? "" },
@@ -41,6 +31,14 @@
     };
 }
 
-<div>
+<section class="sticky top-0 bg-white p-4 shadow-sm z-20 border-b border-gray-100 flex justify-between items-center" id="action-section">
+    <div class="flex-1">
+        <input type="text" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none w-64"
+               oninput="searchTable(this.value)"
+               placeholder="Search activities..."/>
+    </div>
+</section>
+
+<div class="px-6 py-4">
     @await Html.PartialAsync("_Table", table)
 </div>

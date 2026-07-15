@@ -2,50 +2,54 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var inputClass = "p-2 rounded-md focus:focus:ring-blue-500";
+    var disabled = "bg-slate-400 cursor-not-allowed focus:outline-none";
 }
 
-<h1>Edit</h1>
+<div class="px-6 py-8">
+    <h1 class="text-3xl font-bold text-gray-900">Edit Purchase</h1>
+    <p class="text-gray-500 mt-2">Update the details of the purchase below.</p>
+</div>
 
-<h4>Purchase</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="px-6 pb-8">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 max-w-2xl">
+        <form asp-action="Edit" class="space-y-4">
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm mb-4"></div>
             <input type="hidden" asp-for="PurchaseId" />
-            <div class="form-group">
-                <label asp-for="NoOfTickets" class="control-label"></label>
-                <input asp-for="NoOfTickets" class="form-control" />
-                <span asp-validation-for="NoOfTickets" class="text-danger"></span>
+            <input type="hidden" asp-for="ActivityId" />
+            
+            <div>
+                <label asp-for="NoOfTickets" class="block text-sm font-medium text-gray-700"></label>
+                <input asp-for="NoOfTickets" class="mt-1 block w-full rounded-xl border-gray-300 bg-gray-100 cursor-not-allowed shadow-sm" readonly />
+                <span asp-validation-for="NoOfTickets" class="text-red-500 text-xs"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CustomerEmail" class="control-label"></label>
-                <input asp-for="CustomerEmail" class="form-control" />
-                <span asp-validation-for="CustomerEmail" class="text-danger"></span>
+            <div>
+                <label asp-for="CustomerEmail" class="block text-sm font-medium text-gray-700"></label>
+                <input asp-for="CustomerEmail" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                <span asp-validation-for="CustomerEmail" class="text-red-500 text-xs"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CreditCardExp" class="control-label"></label>
-                <input asp-for="CreditCardExp" class="form-control" />
-                <span asp-validation-for="CreditCardExp" class="text-danger"></span>
+            <div>
+                <label asp-for="CreditCardExp" class="block text-sm font-medium text-gray-700"></label>
+                <input asp-for="CreditCardExp" class="mt-1 block w-full rounded-xl border-gray-300 bg-gray-100 cursor-not-allowed shadow-sm" readonly />
+                <span asp-validation-for="CreditCardExp" class="text-red-500 text-xs"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CreditCardCvv" class="control-label"></label>
-                <input asp-for="CreditCardCvv" class="form-control" />
-                <span asp-validation-for="CreditCardCvv" class="text-danger"></span>
+            <div>
+                <label asp-for="CreditCardCvv" class="block text-sm font-medium text-gray-700"></label>
+                <input asp-for="CreditCardCvv" class="mt-1 block w-full rounded-xl border-gray-300 bg-gray-100 cursor-not-allowed shadow-sm" readonly />
+                <span asp-validation-for="CreditCardCvv" class="text-red-500 text-xs"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ActivityId" class="control-label"></label>
-                <select asp-for="ActivityId" class="form-control" asp-items="ViewBag.ActivityId"></select>
-                <span asp-validation-for="ActivityId" class="text-danger"></span>
+            <div>
+                <span class="block text-sm font-medium text-gray-700">Activity</span>
+                <a asp-action="Details" asp-controller="Activities" asp-route-id="@Model.ActivityId" class="text-blue-600 hover:text-blue-800 transition">@Model.Activity!.Title</a>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300 cursor-pointer" />
+            <div class="pt-4">
+                <input type="submit" value="Save Changes" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-700 transition duration-300 cursor-pointer" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="px-6 pb-8">
+    <a asp-action="Index" class="text-gray-500 hover:text-gray-900 transition">← Back to List</a>
 </div>
 

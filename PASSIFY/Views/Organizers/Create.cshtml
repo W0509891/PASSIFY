@@ -4,28 +4,29 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<div class="px-6 py-8">
+    <h1 class="text-3xl font-bold text-gray-900">Create Organizer</h1>
+    <p class="text-gray-500 mt-2">Fill out the form below to create a new organizer.</p>
+</div>
 
-<h4>Organizer</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group mb-3">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<div class="px-6 pb-8">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 max-w-2xl">
+        <form asp-action="Create" class="space-y-4">
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm mb-4"></div>
+            <div>
+                <label asp-for="Name" class="block text-sm font-medium text-gray-700"></label>
+                <input asp-for="Name" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                <span asp-validation-for="Name" class="text-red-500 text-xs"></span>
             </div>
-            <div class="form-group mb-3">
-                <input type="submit" value="Create" class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300 cursor-pointer" />
+            <div class="pt-4">
+                <input type="submit" value="Create" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-700 transition duration-300 cursor-pointer" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="px-6 pb-8">
+    <a asp-action="Index" class="text-gray-500 hover:text-gray-900 transition">← Back to List</a>
 </div>
 
 @section Scripts {

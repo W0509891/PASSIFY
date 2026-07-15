@@ -3,104 +3,77 @@
 
 @{
     ViewData["Title"] = "Details";
-    var imgWidth = 30;
     //Used to ignore certain fields from displaying in the details view.
     var ignore = new List<string> { "ActivityId", "FormFile", "ImageName", "OrganizerId", "CategoryId" };
+    var buttonStyle = "px-5 py-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer";
 }
 
-<div>
-    <h4 class="text-xl font-bold">Activity details</h4>
-    <hr class="my-4"/>
-    <div class="container mx-auto">
-        <div class="flex flex-col md:flex-row justify-around w-full">
+<div class="mx-auto py-10 max-w-5xl">
 
+    <div class="flex flex-row gap-4 mb-6">
 
-            <dl class="flex flex-wrap w-full md:w-1/2">
-                @foreach (var item in Model.GetType().GetProperties())
-                {
-                    // Doesn't display the ID, filename, or organizer ID.'
-                    @if (!ignore.Contains(item.Name))
-                    {
-                        <dt class="w-1/4 font-semibold p-2">
-                            @Html.DisplayName(item.Name)
-                        </dt>
-                        <dd class="w-3/4 p-2">
-                            @* Switch statement to accout for Navigation objects *@
-                            @switch (item.Name)
-                            {
-                                case "Organizer":
-                                    @Html.Display($"{item.Name}.Name")
-                                    break;
-                                case "Category":
-                                    @Html.Display($"{item.Name}.Title")
-                                    break;
-                                case "Title":
-                                    @Html.DisplayFor(model => model.Title)
-                                    break;
-                                case "Purchases":
-                                    <a class="text-blue-600 hover:underline" asp-action="ActivityPurchases" asp-route-id="@Model.ActivityId"
-                                       asp-controller="Activities">@Html.DisplayFor(model => model.Purchases!.Count)</a>
-                                    break;
-                                default:
-                                    @Html.Display(item.Name)
-                                    break;
-                            }
+        <a asp-action="Index" asp-controller="Home" class="@buttonStyle bg-gray-100 hover:bg-gray-200 border border-gray-200">
+            Back
+        </a>
+        <a asp-route-id="@Model.ActivityId" asp-action="Edit" class="@buttonStyle bg-blue-100 hover:bg-blue-200 text-blue-800 border border-blue-200">
+            Edit
+        </a>
+    </div>
+    <!-- Image -->
+    <div class="h-96 overflow-hidden rounded-2xl shadow-xl">
+        <img
+            src="@Model.ImageName"
+            class="w-full h-full object-cover"
+            alt="@Model.Title">
+    </div>
 
-                        </dd>
-                    }
-                }
-            </dl>
+    <!-- Floating content -->
+    <div class="-mt-20 mx-6 bg-white rounded-2xl shadow-2xl p-10 relative z-10 border border-gray-100">
+        <div class="flex w-full items-start justify-between">
+            <div class="flex-1">
+                <h1 class="text-5xl font-extrabold text-gray-900 tracking-tight">
+                    @Model.Title
+                </h1>
 
-            <!-- Activity Image-->
-            @* <img src="@Url.Content("/photos/" + Model.Filename)" alt="@Model.Title" /> *@
+                <p class="text-lg text-gray-600 mt-3 font-medium">
+                    Hosted by <span class="text-blue-600">@Model.Organizer.Name</span>
+                </p>
 
-            <div class="w-full md:w-1/2 mt-4 md:mt-0">
-                <div class="bg-white shadow rounded-lg overflow-hidden border">
-                    <div class="bg-gray-50 px-4 py-2 border-b">
-                        <h5 class="font-semibold">Activity Image</h5>
+                <div class="flex flex-col gap-2 mt-6 text-gray-700">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-6 h-6 text-blue-500">
+                            <use href="@Helpers.SvgPath("calendar")"/>
+                        </svg>
+                        <p class="text-base">@Model.EventStart.ToLongDateString() - @Model.EventEnd.ToLongDateString()</p>
                     </div>
-                    <div class="p-4 text-center">
-                        @if (string.IsNullOrWhiteSpace(Model.ImageName))
-                        {
-                            <img src="@Url.Content("~/assets/photos/placeholder.jpg")" alt="@Model?.Title"
-                                 class="max-w-full h-auto rounded"
-                                 style="max-height: 400px; object-fit: cover;">
-                        }
-                        else
-                        {
-                            <img src="@Url.Content(Model.ImageName)" alt="@Model.Title" 
-                                 class="max-w-full h-auto rounded"
-                                 style="max-height: 400px; object-fit: cover;">
-                        }
+                    <div class="flex items-center gap-3">
+                        <svg class="w-6 h-6 text-blue-500">
+                            <use href="@Helpers.SvgPath("clock")"/>
+                        </svg>
+                        <p class="text-base">@Model.EventStart.ToLongTimeString() - @Model.EventEnd.ToLongTimeString()</p>
                     </div>
                 </div>
             </div>
-
+            
         </div>
 
-        <div class="w-full md:w-1/4 flex justify-between items-center mt-6">
-            <a asp-action="Edit" asp-route-id="@Model?.ActivityId">
+        <hr class="my-8 border-gray-200">
 
-                <img src="/assets/svg/edit.svg"
-                     width=@string.Concat(imgWidth, "px")/>
-            </a>
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">About this activity</h2>
+        <p class="text-gray-700 leading-relaxed text-lg">
+            @Model.Description
+        </p>
 
-            <a asp-action="Delete" asp-route-id="@Model?.ActivityId">
+        <div class="mt-10 flex gap-4">
+            <button class="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition shadow-md">
+                Register Now
+            </button>
 
-                <img src="~/assets/svg/delete.svg"
-                     width=@string.Concat(imgWidth + 20, "px")
-                     alt="Delete">
-            </a>
-
-            <a asp-controller="Extra" asp-action="LastPage">
-
-                <img src="~/assets/svg/back.svg"
-                     width=@string.Concat(imgWidth + 20, "px")
-                     alt="Back">
-            </a>
+            <button class="px-8 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition">
+                Share
+            </button>
         </div>
+
     </div>
 
-
 </div>
-

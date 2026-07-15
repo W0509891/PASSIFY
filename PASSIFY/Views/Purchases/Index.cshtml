@@ -1,59 +1,25 @@
 @model IEnumerable<PASSIFY.Models.Purchase>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Purchases";
+    var purchase_table = new TableViewModel<Purchase>
+    {
+        Items = Model,
+        Id = model => model.PurchaseId,
+        ShowActions = true,
+        Columns =
+        [
+            new TableColumn<Purchase> { Header = "NoOfTickets", Value = model => model.NoOfTickets },
+            new TableColumn<Purchase> { Header = "CustomerEmail", Value = model => model.CustomerEmail },
+            new TableColumn<Purchase> { Header = "CreditCardExp", Value = model => model.CreditCardExp },
+            new TableColumn<Purchase> { Header = "CreditCardCvv", Value = model => model.CreditCardCvv },
+            new TableColumn<Purchase> { Header = "Activity", Value = model => model.Activity.Title },
+        ]
+
+    };
 }
 
-<h1>Index</h1>
 
-<p>
-    <a class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300" asp-action="Create">Create New</a>
-</p>
-<table class="w-full border-collapse mt-4">
-    <thead class="bg-gray-200">
-        <tr>
-            <th class="p-2 text-left border-b">
-                @Html.DisplayNameFor(model => model.NoOfTickets)
-            </th>
-            <th class="p-2 text-left border-b">
-                @Html.DisplayNameFor(model => model.CustomerEmail)
-            </th>
-            <th class="p-2 text-left border-b">
-                @Html.DisplayNameFor(model => model.CreditCardExp)
-            </th>
-            <th class="p-2 text-left border-b">
-                @Html.DisplayNameFor(model => model.CreditCardCvv)
-            </th>
-            <th class="p-2 text-left border-b">
-                @Html.DisplayNameFor(model => model.Activity)
-            </th>
-            <th class="p-2 border-b"></th>
-        </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200">
-@foreach (var item in Model) {
-        <tr class="hover:bg-gray-50">
-            <td class="p-2">
-                @Html.DisplayFor(modelItem => item.NoOfTickets)
-            </td>
-            <td class="p-2">
-                @Html.DisplayFor(modelItem => item.CustomerEmail)
-            </td>
-            <td class="p-2">
-                @Html.DisplayFor(modelItem => item.CreditCardExp)
-            </td>
-            <td class="p-2">
-                @Html.DisplayFor(modelItem => item.CreditCardCvv)
-            </td>
-            <td class="p-2">
-                @Html.DisplayFor(modelItem => item.Activity.ActivityId)
-            </td>
-            <td class="p-2">
-                <a class="text-blue-600 hover:text-blue-800 mr-2" asp-action="Edit" asp-route-id="@item.PurchaseId">Edit</a>
-                <a class="text-blue-600 hover:text-blue-800 mr-2" asp-action="Details" asp-route-id="@item.PurchaseId">Details</a>
-                <a class="text-red-600 hover:text-red-800" asp-action="Delete" asp-route-id="@item.PurchaseId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<partial name="_Header" model="@ViewBag.Title" />
+
+@await Html.PartialAsync("_Table", purchase_table)
